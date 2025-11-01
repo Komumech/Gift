@@ -178,14 +178,11 @@ const sampleMessages = [
 /* Populate timeline and messages DOM */
 function populateContent(){
   timelineEl.innerHTML = '';
-  sampleTimeline.forEach(it=>{
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <img src="${it.img}" alt="${it.title}"/>
-      <div class="meta">${it.year} · ${it.title}</div>
-      <p class="caption">${it.caption}</p>`;
-    timelineEl.appendChild(card);
+  sampleTimeline.forEach(it => {
+    const img = document.createElement('img');
+    img.src = it.img;
+    img.alt = `${it.title} - ${it.caption}`;
+    timelineEl.appendChild(img);
   });
 
   messagesGrid.innerHTML = '';
@@ -291,7 +288,7 @@ function initCursorFollower() {
   });
   // Change cursor on hover
   const cursorSVG = cursorEl.querySelector('svg');
-  const interactiveEls = $$('button, [role="button"], .timeline .card, .message-tile, .envelope');
+  const interactiveEls = $$('button, [role="button"], .message-tile, .envelope');
   const creamColor = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim();
   const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
 
