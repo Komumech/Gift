@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For Mum — Happy Birthday</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Quicksand:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+  
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <meta name="theme-color" content="#efe6dc" />
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- Ambient audio toggle -->
+    <div id="audioToggle" role="button" tabindex="0" title="Toggle ambient audio">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"><path d="M11 5 L6 9 H2v6h4l5 4V5z"></path><path d="M19 8a5 5 0 0 1 0 8"></path></svg>
+    </div>
+
+    <!-- Hero -->
+    <header id="hero" role="banner">
+      <canvas id="foilCanvas" aria-hidden="true"></canvas>
+      <div class="hero-inner">
+        <div class="portrait-medallion" id="medallion">
+          <img id="portraitImg" src="portrait-placeholder.jpg" alt="Portrait of Mum" />
+          <div class="medallion-seal" aria-hidden="true"></div>
+        </div>
+        <h1 class="headline">For the One Who Gives Us Home</h1>
+        <p class="subline">Happy Birthday Mum — a keepsake of memories and small things that make you, you</p>
+        <div class="hero-actions">
+          <button id="openEnvelope" class="btn primary">Open the Surprise</button>
+          <button id="viewCollage" class="btn ghost">View Memory Collage</button>
+        </div>
+      </div>
+      <div class="paper-edge" aria-hidden="true"></div>
+    </header>
+
+    <main id="main">
+
+      <!-- Portrait and tribute -->
+      <section id="tribute" class="panel">
+        <div class="container">
+          <div class="left">
+            <div class="portrait-large" id="portraitLarge">
+              <img src="portrait-placeholder.jpg" alt="Portrait of Mum" />
+            </div>
+          </div>
+          <div class="right">
+            <h2 class="section-title">A Letterpress Tribute</h2>
+            <p class="lead">For all the quiet ways you held our days together. Thank you for the small things that felt like home.</p>
+            <div class="letterpress" id="letterpress">
+              <p>Always steady. Always kind. Always mum.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Memory Collage timeline -->
+      <section id="collage" class="panel">
+        <h2 class="section-title center">Memory Collage</h2>
+        <div class="timeline" id="timeline" aria-live="polite"></div>
+      </section>
+
+      <!-- Messages wall -->
+      <section id="messages" class="panel">
+        <h2 class="section-title">Messages of Love</h2>
+        <div class="messages-grid" id="messagesGrid"></div>
+      </section>
+
+      <!-- Surprise reveal -->
+      <section id="reveal" class="panel">
+        <h2 class="section-title center">The Surprise</h2>
+        <div class="envelope-wrap">
+          <div class="envelope" id="envelope" role="button" tabindex="0" aria-pressed="false">
+            <div class="envelope-back"></div>
+            <div class="envelope-left-flap"></div>
+            <div class="envelope-right-flap"></div>
+            <div class="envelope-bottom-flap"></div>
+            <div class="envelope-top"></div>
+            <div class="envelope-body">
+              <div class="wax-seal"></div>
+            </div>
+            <div class="card" id="card">
+              <h3>Happy Birthday Mum</h3>
+              <p>For all the times you held us close</p>
+              <div class="gift-note" id="giftNote">Open me</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer keepsake -->
+      <footer id="footer">
+        <p class="small">Printable keepsake card available below</p>
+        <div class="footer-actions">
+          <button id="downloadCard" class="btn ghost">Download Printable Card</button>
+        </div>
+      </footer>
+
+    </main>
+
+    <!-- hidden ambient audio -->
+    <audio id="ambientAudio" loop preload="auto">
+      <source src="ambient-loop.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
