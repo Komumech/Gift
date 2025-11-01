@@ -54,6 +54,18 @@ body {
   color: var(--accent);
 }
 
+/* Hide the inactive icon */
+#audioToggle .icon-sound-off {
+  display: none;
+}
+
+#audioToggle.active .icon-sound-on {
+  display: none;
+}
+#audioToggle.active .icon-sound-off {
+  display: block;
+}
+
 /* hero */
 #hero {
   position: relative;

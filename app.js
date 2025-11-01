@@ -319,8 +319,19 @@ onResize();
 
 /* Audio control */
 audioToggle.addEventListener('click', ()=>{
-  if(ambient.paused){ ambient.play().catch(()=>{}); audioToggle.classList.add('active'); }
-  else { ambient.pause(); audioToggle.classList.remove('active'); }
+  if (ambient.paused) {
+    ambient.play().then(() => {
+      audioToggle.classList.add('active');
+      audioToggle.setAttribute('title', 'Mute ambient audio');
+    }).catch(() => {
+      // Playback was prevented, so ensure UI is in the paused state.
+      audioToggle.classList.remove('active');
+    });
+  } else {
+    ambient.pause();
+    audioToggle.classList.remove('active');
+    audioToggle.setAttribute('title', 'Play ambient audio');
+  }
 });
 audioToggle.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') audioToggle.click(); });
 
