@@ -22,6 +22,8 @@ const messagesGrid = $('#messagesGrid');
 const portraitLarge = $('#portraitLarge img');
 const viewCollage = $('#viewCollage');
 const downloadCard = $('#downloadCard');
+const lightbox = $('#lightbox');
+const lightboxClose = $('#lightboxClose');
 
 /* Basic assets fallback generation if images missing */
 function ensurePlaceholderImage(selector){
@@ -164,9 +166,16 @@ gsap.from('#letterpress',{y:12,opacity:0,duration:1.2,delay:0.6,ease:"power3.out
 
 /* Timeline and messages sample data */
 const sampleTimeline = [
-  {year:"1985", title:"Birth", img:"data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='800' height='500'><rect width='100%' height='100%' fill='#f6eee3'/><text x='50%' y='50%' font-size='34' text-anchor='middle' fill='#b28a41' font-family='Playfair Display,serif'>Baby</text></svg>`) , caption:"The beginning of everything"},
-  {year:"1998", title:"Graduation", img:"data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='800' height='500'><rect width='100%' height='100%' fill='#f9f3ee'/><text x='50%' y='50%' font-size='34' text-anchor='middle' fill='#7f5b3a' font-family='Playfair Display,serif'>Caps Off</text></svg>`), caption:"Caps, smiles and proud hearts"},
-  {year:"2010", title:"Family Trip", img:"data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='800' height='500'><rect width='100%' height='100%' fill='#f2eee7'/><text x='50%' y='50%' font-size='34' text-anchor='middle' fill='#8a5f36' font-family='Playfair Display,serif'>Roadtrip</text></svg>`), caption:"Miles and memories"}
+  {year:"2023", title:"Family Time", img:"wa0000.jpg", caption:"A beautiful day together."},
+  {year:"2023", title:"Celebration", img:"wa0001.jpg", caption:"Making precious memories."},
+  {year:"2023", title:"Candid Moment", img:"wa0002.jpg", caption:"Laughter and joy."},
+  {year:"2023", title:"Golden Hour", img:"wa0003.jpg", caption:"Sun-kissed smiles."},
+  {year:"2023", title:"Group Hug", img:"wa0004.jpg", caption:"Wrapped in love."},
+  // wa0005.jpg is skipped as requested
+  {year:"2023", title:"Special Occasion", img:"wa0006.jpg", caption:"Dressed up and happy."},
+  {year:"2023", title:"At Home", img:"wa0007.jpg", caption:"The comfort of family."},
+  {year:"2023", title:"Another great day", img:"wa0008.jpg", caption:"Every moment counts."},
+  {year:"2023", title:"Pure Happiness", img:"wa0009.jpg", caption:"A smile that lights up the room."}
 ];
 const sampleMessages = [
   "You taught me kindness by example",
@@ -182,6 +191,9 @@ function populateContent(){
     const img = document.createElement('img');
     img.src = it.img;
     img.alt = `${it.title} - ${it.caption}`;
+    img.addEventListener('click', () => {
+      showLightbox(it.img);
+    });
     timelineEl.appendChild(img);
   });
 
@@ -288,7 +300,7 @@ function initCursorFollower() {
   });
   // Change cursor on hover
   const cursorSVG = cursorEl.querySelector('svg');
-  const interactiveEls = $$('button, [role="button"], .message-tile, .envelope');
+  const interactiveEls = $$('button, [role="button"], .timeline img, .message-tile, .envelope');
   const creamColor = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim();
   const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
 
@@ -321,16 +333,16 @@ onResize();
 audioToggle.addEventListener('click', ()=>{
   if (ambient.paused) {
     ambient.play().then(() => {
-      audioToggle.classList.add('active');
-      audioToggle.setAttribute('title', 'Mute ambient audio');
+      audioToggle.classList.remove('muted');
+      audioToggle.setAttribute('title', 'Mute ambient audio'); // Action is to mute
     }).catch(() => {
       // Playback was prevented, so ensure UI is in the paused state.
-      audioToggle.classList.remove('active');
+      audioToggle.classList.add('muted');
     });
   } else {
     ambient.pause();
-    audioToggle.classList.remove('active');
-    audioToggle.setAttribute('title', 'Play ambient audio');
+    audioToggle.classList.add('muted');
+    audioToggle.setAttribute('title', 'Play ambient audio'); // Action is to play
   }
 });
 audioToggle.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') audioToggle.click(); });
@@ -356,6 +368,31 @@ downloadCard.addEventListener('click', ()=>{
   const w = window.open('', '_blank');
   w.document.write(html);
   w.document.close();
+});
+
+/* Lightbox logic */
+function showLightbox(src) {
+  const lightboxImg = lightbox.querySelector('img');
+  lightboxImg.setAttribute('src', src);
+  lightbox.classList.add('visible');
+  gsap.fromTo(lightbox, { opacity: 0 }, { opacity: 1, duration: 0.4 });
+  gsap.fromTo(lightboxImg, { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, delay: 0.1, ease: 'power2.out' });
+}
+
+function hideLightbox() {
+  gsap.to(lightbox, {
+    opacity: 0,
+    duration: 0.4,
+    onComplete: () => {
+      lightbox.classList.remove('visible');
+      lightbox.querySelector('img').setAttribute('src', ''); // Clear src
+    }
+  });
+}
+
+lightboxClose.addEventListener('click', hideLightbox);
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightbox) hideLightbox(); // Close if clicking on the background
 });
 
 /* small helper */

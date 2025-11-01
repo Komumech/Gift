@@ -50,22 +50,6 @@ body {
   color: var(--muted);
 }
 
-#audioToggle.active {
-  color: var(--accent);
-}
-
-/* Hide the inactive icon */
-#audioToggle .icon-sound-off {
-  display: none;
-}
-
-#audioToggle.active .icon-sound-on {
-  display: none;
-}
-#audioToggle.active .icon-sound-off {
-  display: block;
-}
-
 /* hero */
 #hero {
   position: relative;
@@ -304,6 +288,9 @@ body {
   /* Add some padding around the image */
   object-fit: cover;
 }
+.timeline img {
+  cursor: none; /* Use custom cursor */
+}
 
 /* messages */
 .messages-grid {
@@ -505,4 +492,48 @@ body::after {
   mix-blend-mode: multiply;
   z-index: 50;
   opacity: 0.6;
+}
+
+/* Lightbox for expanded image view */
+#lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 20, 10, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+#lightbox.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+#lightbox .lightbox-content img {
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  display: block;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+  border-radius: 8px;
+}
+
+#lightboxClose {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 36px;
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: none;
+  line-height: 1;
 }
