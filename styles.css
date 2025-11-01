@@ -259,6 +259,24 @@ body {
   overflow-y: hidden;
   padding: 18px 12px 24px;
   scroll-snap-type: x mandatory;
+  /* Firefox scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) var(--bg);
+}
+
+/* Webkit (Chrome, Safari) scrollbar styling */
+.timeline::-webkit-scrollbar {
+  height: 8px;
+}
+
+.timeline::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.timeline::-webkit-scrollbar-thumb {
+  background-color: var(--muted);
+  border-radius: 4px;
 }
 
 .timeline img {
