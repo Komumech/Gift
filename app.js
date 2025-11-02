@@ -3,7 +3,16 @@
 // Make sure portrait-placeholder.jpg and ambient-loop.mp3 exist in the same folder or replace paths
 
 document.addEventListener('DOMContentLoaded', () => {
-
+  // Autoplay audio on first user interaction
+  const playAudio = () => {
+    const ambient = document.getElementById('ambientAudio');
+    const audioToggle = document.getElementById('audioToggle');
+    ambient.play();
+    audioToggle.classList.remove('muted');
+    audioToggle.setAttribute('title', 'Mute ambient audio');
+    document.body.removeEventListener('click', playAudio); // Play only once
+  };
+  document.body.addEventListener('click', playAudio, { once: true });
 
 /* Utility */
 const $ = sel => document.querySelector(sel);
@@ -175,7 +184,7 @@ const sampleTimeline = [
   {year:"2023", title:"Special Occasion", img:"IMG-20200619-WA0009.jpg", caption:"Dressed up and happy."},
   {year:"2023", title:"At Home", img:"IMG-20220328-WA0025.jpg", caption:"The comfort of family."},
   {year:"2023", title:"Another great day", img:"IMG-20220916-WA0037.jpg", caption:"Every moment counts."},
-  {year:"2023", title:"Pure Happiness", img:"IMG_20200326_190641_896i.jpg", caption:"A smile that lights up the room."}
+  {year:"2023", title:"Pure Happiness", img:"IMG_20200326_190641_896.jpg", caption:"A smile that lights up the room."}
 ];
 const sampleMessages = [
   "You taught me kindness by example",
@@ -276,7 +285,19 @@ function burstConfetti(x, y){
 }
 
 /* Interactive heart cursor follower */
+// This function needs to be globally accessible for the lightbox to use it.
+window.toggleCustomCursor = (isActive) => {
+  const cursorEl = $('.custom-cursor');
+  if (!cursorEl) return;
+  document.body.style.cursor = isActive ? 'none' : 'default';
+  gsap.to(cursorEl, {
+    opacity: isActive ? 1 : 0,
+    duration: 0.3
+  });
+};
+
 function initCursorFollower() {
+  let isCursorActive = true;
   const cursorEl = document.createElement('div');
   cursorEl.className = 'custom-cursor';
   cursorEl.style.cssText = 'position:fixed;width:24px;height:24px;top:0;left:0;pointer-events:none;z-index:300;transform:translate(-50%,-50%);';
@@ -306,6 +327,8 @@ function initCursorFollower() {
   });
 
   gsap.ticker.add(() => {
+    if (!isCursorActive) return;
+
     const dt = 1.0 - Math.pow(1.0 - speed, gsap.ticker.deltaRatio());
     pos.x += (mouse.x - pos.x) * dt;
     pos.y += (mouse.y - pos.y) * dt;
