@@ -536,4 +536,5 @@ body::after {
   border: none;
   cursor: none;
   line-height: 1;
+  z-index: 310; /* Ensure it's above the custom cursor (z-index: 300) */
 }

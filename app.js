@@ -166,16 +166,16 @@ gsap.from('#letterpress',{y:12,opacity:0,duration:1.2,delay:0.6,ease:"power3.out
 
 /* Timeline and messages sample data */
 const sampleTimeline = [
-  {year:"2023", title:"Family Time", img:"wa0000.jpg", caption:"A beautiful day together."},
-  {year:"2023", title:"Celebration", img:"wa0001.jpg", caption:"Making precious memories."},
-  {year:"2023", title:"Candid Moment", img:"wa0002.jpg", caption:"Laughter and joy."},
-  {year:"2023", title:"Golden Hour", img:"wa0003.jpg", caption:"Sun-kissed smiles."},
-  {year:"2023", title:"Group Hug", img:"wa0004.jpg", caption:"Wrapped in love."},
+  {year:"2023", title:"Family Time", img:"IMG-20221027-WA0004.jpg", caption:"A beautiful day together."},
+  {year:"2023", title:"Celebration", img:"IMG_20200618_215555_337.jpg", caption:"Making precious memories."},
+  {year:"2023", title:"Candid Moment", img:"IMG_20200620_145529_517.jpg", caption:"Laughter and joy."},
+  {year:"2023", title:"Golden Hour", img:"IMG_20200702_122756_687.jpg", caption:"Sun-kissed smiles."},
+  {year:"2023", title:"Group Hug", img:"IMG_20200706_142101_906.jpg", caption:"Wrapped in love."},
   // wa0005.jpg is skipped as requested
-  {year:"2023", title:"Special Occasion", img:"wa0006.jpg", caption:"Dressed up and happy."},
-  {year:"2023", title:"At Home", img:"wa0007.jpg", caption:"The comfort of family."},
-  {year:"2023", title:"Another great day", img:"wa0008.jpg", caption:"Every moment counts."},
-  {year:"2023", title:"Pure Happiness", img:"wa0009.jpg", caption:"A smile that lights up the room."}
+  {year:"2023", title:"Special Occasion", img:"IMG-20200619-WA0009.jpg", caption:"Dressed up and happy."},
+  {year:"2023", title:"At Home", img:"IMG-20220328-WA0025.jpg", caption:"The comfort of family."},
+  {year:"2023", title:"Another great day", img:"IMG-20220916-WA0037.jpg", caption:"Every moment counts."},
+  {year:"2023", title:"Pure Happiness", img:"IMG_20200326_190641_896i.jpg", caption:"A smile that lights up the room."}
 ];
 const sampleMessages = [
   "You taught me kindness by example",
@@ -206,6 +206,27 @@ function populateContent(){
   });
 }
 populateContent();
+
+/* Envelope opening animation */
+function openReveal() {
+  // Prevent re-opening if already open
+  if (envelope.classList.contains('open')) return;
+  envelope.classList.add('open');
+  envelope.setAttribute('aria-pressed', 'true');
+
+  const tl = gsap.timeline();
+  tl.to('.wax-seal', { opacity: 0, duration: 0.3, ease: 'power2.in' })
+    .to('.envelope-top', {
+      rotationX: -180,
+      duration: 0.7,
+      ease: 'power3.inOut'
+    }, '-=0.2')
+    .to('#card', {
+      y: '0%', // Animate to its natural position from being hidden
+      duration: 0.8,
+      ease: 'power3.out'
+    }, '-=0.5');
+}
 
 openEnvelope.addEventListener('click', () => {
   $('#reveal').scrollIntoView({behavior:'smooth', block:'center'});
@@ -257,7 +278,8 @@ function burstConfetti(x, y){
 /* Interactive heart cursor follower */
 function initCursorFollower() {
   const cursorEl = document.createElement('div');
-  cursorEl.style.cssText = 'position:fixed;width:24px;height:24px;top:0;left:0;pointer-events:none;z-index:200;transform:translate(-50%,-50%);';
+  cursorEl.className = 'custom-cursor';
+  cursorEl.style.cssText = 'position:fixed;width:24px;height:24px;top:0;left:0;pointer-events:none;z-index:300;transform:translate(-50%,-50%);';
   cursorEl.innerHTML = `<svg viewBox="0 0 24 24" fill="#b28a41" style="filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
   document.body.appendChild(cursorEl);
 
@@ -292,6 +314,11 @@ function initCursorFollower() {
   });
 
   document.addEventListener('click', e => {
+    // Prevent cursor click animation if clicking on a timeline image to avoid conflict with lightbox opening
+    if (e.target.closest('.timeline img')) return;
+
+    // Do not trigger confetti burst if the lightbox is open, to prevent event conflicts
+    if (lightbox.classList.contains('visible')) return;
     burstConfetti(e.clientX, e.clientY);
     gsap.fromTo(cursorEl, 
       { scale: 1, opacity: 1 }, 
@@ -372,6 +399,8 @@ downloadCard.addEventListener('click', ()=>{
 
 /* Lightbox logic */
 function showLightbox(src) {
+  window.toggleCustomCursor(false); // Disable custom cursor
+
   const lightboxImg = lightbox.querySelector('img');
   lightboxImg.setAttribute('src', src);
   lightbox.classList.add('visible');
@@ -386,6 +415,7 @@ function hideLightbox() {
     onComplete: () => {
       lightbox.classList.remove('visible');
       lightbox.querySelector('img').setAttribute('src', ''); // Clear src
+      window.toggleCustomCursor(true); // Re-enable custom cursor
     }
   });
 }
